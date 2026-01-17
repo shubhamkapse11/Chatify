@@ -8,7 +8,9 @@ import { useAuth } from './context/useAuth'
 import { Toaster } from 'react-hot-toast'
 
 function App() {
+
   const [authUser, setAuthUser] = useAuth();
+
   return (
     <>
       <Routes>
@@ -28,7 +30,7 @@ function App() {
         <Route
           path="/login"
           element={authUser ? <Navigate to="/" /> : <Login />}
-        />
+        />   
         <Route
           path="/signup"
           element={authUser ? <Navigate to="/" /> : <Signup />}
