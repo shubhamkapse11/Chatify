@@ -1,0 +1,94 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useAuth } from "../context/useAuth";
+
+const loginSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const Login = () => {
+    const [authUser, setAuthUser] = useAuth();
+    const navigate = useNavigate();
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(loginSchema),
+    });
+
+    const onSubmit = async (data) => {
+        const userInfo = {
+            email: data.email,
+            password: data.password,
+        };
+        try {
+            const response = await axios.post("/api/users/login", userInfo);
+            if (response.data) {
+                toast.success("Login successful");
+                localStorage.setItem("Chatify", JSON.stringify(response.data));
+                setAuthUser(response.data);
+                navigate("/");
+            }
+        } catch (error) {
+            if (error.response) {
+                toast.error(error.response.data.message || "Login failed");
+            } else {
+                toast.error("Login failed");
+            }
+        }
+    };
+
+    return (
+        <div className="flex h-screen items-center justify-center bg-slate-900 text-white">
+            <div className="w-full max-w-md p-8 space-y-6 bg-slate-800 rounded-lg shadow-xl">
+                <h2 className="text-3xl font-bold text-center">Login</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium">Email</label>
+                        <input
+                            type="email"
+                            {...register("email")}
+                            className="w-full px-4 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter your email"
+                        />
+                        {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium">Password</label>
+                        <input
+                            type="password"
+                            {...register("password")}
+                            className="w-full px-4 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter your password"
+                        />
+                        {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-300"
+                    >
+                        Login
+                    </button>
+                </form>
+                <p className="text-sm text-center text-slate-400">
+                    Don't have an account?{" "}
+                    <Link to="/signup" className="text-blue-500 hover:underline">
+                        Signup
+                    </Link>
+                </p>
+            </div>
+        </div>
+    );
+};
+
+export default Login;
