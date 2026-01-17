@@ -56,4 +56,4 @@ const logoutUser = async (req , res) => {
     res.json({message : "User logged out successfully"})
 }
 
-module.exports = {registerUser , loginUser}
+module.exports = {registerUser , loginUser , logoutUser}
