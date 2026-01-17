@@ -36,7 +36,8 @@ const Signup = () => {
             password: data.password,
         };
         try {
-            const response = await axios.post("/api/users/register", userInfo);
+            const url = "http://localhost:5003/api/users/register";
+            const response = await axios.post(url, userInfo);
             if (response.data) {
                 toast.success("Signup successful");
                 localStorage.setItem("Chatify", JSON.stringify(response.data));

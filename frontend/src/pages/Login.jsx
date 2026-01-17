@@ -30,7 +30,8 @@ const Login = () => {
             password: data.password,
         };
         try {
-            const response = await axios.post("/api/users/login", userInfo);
+            const url = "http://localhost:5003/api/users/login";
+            const response = await axios.post(url, userInfo);
             if (response.data) {
                 toast.success("Login successful");
                 localStorage.setItem("Chatify", JSON.stringify(response.data));
