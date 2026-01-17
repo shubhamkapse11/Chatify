@@ -41,7 +41,7 @@ const Login = () => {
             if (error.response) {
                 toast.error(error.response.data.message || "Login failed");
             } else {
-                toast.error("Login failed");
+                toast.error("Login failed retry");
             }
         }
     };

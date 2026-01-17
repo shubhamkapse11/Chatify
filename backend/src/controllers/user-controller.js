@@ -27,6 +27,7 @@ const loginUser = async (req , res) => {
             return res.status(400).json({message : "User not found"})
         }
         const isValidPass = await user.isPasswordCorrect(password);
+        console.log("Password is valid" , isValidPass);
         if(!isValidPass){
             return res.status(400).json({message : "Incorrect password"})
         }   
@@ -47,7 +48,7 @@ const loginUser = async (req , res) => {
             }
         })
     } catch (error) {
-        res.status(500).json({message : "Internal server error"})
+        res.status(500).json({message : "Internal server error " + error})
     }
 }
 
