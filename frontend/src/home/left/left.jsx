@@ -11,7 +11,9 @@ function Left() {
     // Static user data
     function getAlluser() {
         const url = "http://localhost:5003/api/users/user";
-        axios.get(url)
+        axios.get(url, {
+            withCredentials: true,
+        })
             .then((response) => {
                 console.log("response", response)
                 const filteredUsers = response.data.data.filter(user => user._id !== authUser.data.userData._id);
@@ -40,7 +42,7 @@ function Left() {
             <div className='flex-1 overflow-y-auto px-2 space-y-2 no-scrollbar'>
                 {users.map((user) => (
                     <div
-                        key={user.id}
+                        key={user._id}
                         className={cn(
                             "flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors",
                             "hover:bg-slate-800 text-slate-200 hover:text-white"

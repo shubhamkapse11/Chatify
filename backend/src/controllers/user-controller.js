@@ -2,17 +2,34 @@ const UserModel = require("../models/user-model");
 // const bcrypt = require("bcrypt");
 
 
-const registerUser = async (req , res) => {
-    const {name , email , password} = req.body;
-    if(!name || !email || !password){
-        return res.status(400).json({message : "All fields are required"})
+const registerUser = async (req, res) => {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: "All fields are required" })
     }
     try {
-        const user = await new UserModel({name , email , password})
+        const user = new UserModel({ name, email, password })
         await user.save();
-        res.json({message : "User registered successfully"})
+
+        const token = user.generateAccessToken();
+        const userData = {
+            name: user.name,
+            email: user.email,
+            _id: user._id
+        }
+        const options = {
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+            httpOnly: true
+        }
+        res.cookie("accessToken", token, options).status(201).json({
+            message: "User registered successfully",
+            data: {
+                userData,
+                token
+            }
+        })
     } catch (error) {
-        res.status(500).json({message : "User registration failed , " + error})
+        res.status(500).json({ message: "User registration failed , " + error })
     }
 }
 
@@ -38,7 +55,7 @@ const loginUser = async (req , res) => {
             _id: user._id
         }
         const options = {
-            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) ,
             httpOnly: true
         }
         return res.cookie("accessToken", token, options).status(200).json({message : "User logged in successfully" , 
@@ -58,8 +75,11 @@ const logoutUser = async (req , res) => {
 }
 
 const getAllUsers = async (req,res) =>{
+    console.log("use-----y" , req)    
     try{
-        const users = await UserModel.find()
+        // const reqUser = req.user._id
+        const users = await UserModel.find().select("-password");
+        // const reqData = users.
         res.json({message : "Users fetched successfully" , data : users})
     }catch(error){
         res.status(500).json({message : "Internal server error " + error})
