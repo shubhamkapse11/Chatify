@@ -57,4 +57,13 @@ const logoutUser = async (req , res) => {
     res.json({message : "User logged out successfully"})
 }
 
-module.exports = {registerUser , loginUser , logoutUser}
+const getAllUsers = async (req,res) =>{
+    try{
+        const users = await UserModel.find()
+        res.json({message : "Users fetched successfully" , data : users})
+    }catch(error){
+        res.status(500).json({message : "Internal server error " + error})
+    }
+}
+
+module.exports = {registerUser , loginUser , logoutUser , getAllUsers}
