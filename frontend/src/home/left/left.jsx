@@ -2,22 +2,29 @@ import React from 'react'
 import SearchComponent from '../../components/Search'
 import { cn } from '../../lib/utils'
 import { LogOut } from 'lucide-react'
-
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../../context/useAuth'
 function Left() {
+    const [users, setUsers] = useState([])
+    const [authUser] = useAuth();
     // Static user data
-    const users = [
-        { id: 1, name: "Alice Johnson", email: "alice@example.com" },
-        { id: 2, name: "Bob Smith", email: "bob@introvert.com" },
-        { id: 3, name: "Charlie Brown", email: "charlie@peanuts.com" },
-        { id: 4, name: "Diana Prince", email: "diana@amazon.com" },
-        { id: 5, name: "Evan Wright", email: "evan@write.com" },
-        { id: 6, name: "Fiona Gallagher", email: "fiona@chicago.com" },
-        { id: 7, name: "George Martin", email: "george@winterfell.com" },
-        { id: 8, name: "Hannah Montana", email: "hannah@popstar.com" },
-        { id: 9, name: "Ian Somerhalder", email: "ian@vampire.com" },
-        { id: 10, name: "Jack Daniels", email: "jack@whiskey.com" },
-    ]
-
+    function getAlluser() {
+        const url = "http://localhost:5003/api/users/user";
+        axios.get(url)
+            .then((response) => {
+                console.log("response", response)
+                const filteredUsers = response.data.data.filter(user => user._id !== authUser.data.userData._id);
+                setUsers(filteredUsers);
+            })
+            .catch((error) => {
+                console.error("Error fetching users:", error);
+            });
+    }
+    useEffect(() => {
+        getAlluser();
+    }, []);
+    console.log("users", users)
     return (
         <div className='w-[30%] h-full bg-slate-950 border-r border-slate-800 flex flex-col'>
             {/* Header */}
