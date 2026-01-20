@@ -5,13 +5,13 @@ import { LogOut } from 'lucide-react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/useAuth'
-import { useConversation } from '../../states-manager/useConversation'
+import useConversation from '../../states-manager/useConversation'
 function Left() {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [authUser] = useAuth();
-    const { setSelectedConversation } = useConversation();
+    const { selectedConversation } = useConversation();
     // Static user data
     function getAlluser() {
         setLoading(true);
