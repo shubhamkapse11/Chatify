@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { create } from 'zustand'
 
-const useConversation = () => {
-    const [conversations , setConversations] = useState([])
-}
-
-export default useConversation
+const useConversation = create((set) => ({
+  selectedConversation: null,
+  setSelectedConversation: (selectedConversation) => set({ selectedConversation }),
+  messages: [],
+  setMessages: (messages) => set({ messages }),
+}))
