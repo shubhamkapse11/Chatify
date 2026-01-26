@@ -8,6 +8,7 @@ const sendMessage = async (req , res) => {
         const {message} = req.body;
         const {id : receiver} = req.params;
         const sender = req.user._id;
+        console.log("sender , receiver , message" , sender , receiver , message)
         if(!isValidObjectId(receiver)){
             return res.status(400).json({message : "Invalid user id"})
         }
@@ -47,7 +48,7 @@ const getMessages = async (req , res) => {
             participants : {$all : [sender , receiver]}
         })
         if(!conversation){
-            return res.status(400).json({message : "No conversation found"})
+            return res.status(200).json({messages: []})
         }
         const messages = await Message.find({
             _id : {$in : conversation.messages}
