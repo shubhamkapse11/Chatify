@@ -1,17 +1,33 @@
 import React from "react";
 import { cn } from "../lib/utils";
+import useGetMessages from "../context/useGetMessages";
 
 const Messages = () => {
-    const messages = [
-        { id: 1, text: "Hey! How's it going?", sender: "receiver", time: "10:00 AM" },
-        { id: 2, text: "Not bad, just working on the chat app.", sender: "sender", time: "10:01 AM" },
-        { id: 3, text: "That sounds cool! Is it using Shadcn/UI?", sender: "receiver", time: "10:02 AM" },
-        { id: 4, text: "Yeah, for the layout and basic components.", sender: "sender", time: "10:05 AM" },
-    ];
+   const {messages , loading } = useGetMessages();
+
+   if(loading){
+    return (
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+            <div className="flex items-center justify-center h-full text-slate-500">
+                <span>Loading messages...</span>
+            </div>
+        </div>
+    )
+   }
+   
+   if(!messages){
+    return (
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+            <div className="flex items-center justify-center h-full text-slate-500">
+                <span>No messages found</span>
+            </div>
+        </div>
+    )
+   }
 
     return (
         <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-            {messages.map((msg) => (
+            {messages?.map((msg) => (
                 <div
                     key={msg.id}
                     className={cn(

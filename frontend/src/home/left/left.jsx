@@ -11,10 +11,11 @@ function Left() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [authUser] = useAuth();
-    const { selectedConversation , setSelectedConversation} = useConversation();
+    const { selectedConversation, setSelectedConversation } = useConversation();
     const handleUserClick = (user) => {
+        console.log("user==", user)
         setSelectedConversation(user);
-    };  
+    };
     // Static user data
     function getAlluser() {
         setLoading(true);
@@ -39,7 +40,7 @@ function Left() {
         getAlluser();
     }, []);
 
-    console.log("users", users)
+    // console.log("users", users)
     return (
         <div className='w-[30%] h-full bg-slate-950 border-r border-slate-800 flex flex-col'>
             {/* Header */}
@@ -73,13 +74,14 @@ function Left() {
                         <span>No users found</span>
                     </div>
                 ) : (
-                    users.map((user) => (
+                    users?.map((user) => (
                         <div
                             key={user._id}
                             className={cn(
-                                "flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors",
+                                `flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${selectedConversation?._id === user._id ? "bg-slate-800" : ""}`,
                                 "hover:bg-slate-800 text-slate-200 hover:text-white"
                             )}
+                            onClick={() => handleUserClick(user)}
                         >
                             {/* Avatar Placeholder */}
                             <div className='h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center text-sm font-medium'>
