@@ -1,11 +1,12 @@
 import React from "react";
 import { useAuth } from "../context/useAuth";
-
+import useConversation from "../states-manager/useConversation";
 const ChatUser = () => {
     const [authUser] = useAuth();
     // Correctly access name from the nested data structure
     const userName = authUser?.data?.userData?.name || "User";
-
+    const {selectedConversation , setSelectedConversation} = useConversation();
+    const isSelected = selectedConversation?._id === authUser?.data?.userData?._id;
     return (
         <div className="flex items-center gap-3 p-4 bg-slate-800 border-b border-slate-700">
             {/* Avatar */}

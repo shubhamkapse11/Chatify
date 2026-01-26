@@ -11,7 +11,10 @@ function Left() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [authUser] = useAuth();
-    const { selectedConversation } = useConversation();
+    const { selectedConversation , setSelectedConversation} = useConversation();
+    const handleUserClick = (user) => {
+        setSelectedConversation(user);
+    };  
     // Static user data
     function getAlluser() {
         setLoading(true);
