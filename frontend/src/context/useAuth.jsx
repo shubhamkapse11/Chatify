@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const initialUserState = Cookies.get("jwt") || localStorage.getItem("Chatify");
+    const initialUserState =  localStorage.getItem("Chatify");
     // parse the user data if it exists
     let parsedUser;
     try {
