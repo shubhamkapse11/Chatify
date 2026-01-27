@@ -6,12 +6,14 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/useAuth'
 import useConversation from '../../states-manager/useConversation'
+import useLogout from '../../context/useLogout'
 function Left() {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [authUser] = useAuth();
     const { selectedConversation, setSelectedConversation } = useConversation();
+    const { logout, loading: logoutLoading } = useLogout();
     const handleUserClick = (user) => {
         console.log("user==", user)
         setSelectedConversation(user);
@@ -97,10 +99,10 @@ function Left() {
                     ))
                 )}
             </div>
-            <div className='p-4 flex items-center gap-2 bg-slate-800  rounded-lg hover:bg-slate-700 transition-colors'>
+            <div className='p-4 flex items-center gap-2 bg-slate-800  rounded-lg hover:bg-slate-700 transition-colors cursor-pointer' onClick={logout}>
                 <LogOut className="w-4 h-4 mr-2" />
-                <button className='text-white px-4 py-2 '>
-                    Logout
+                <button className='text-white px-4 py-2' disabled={logoutLoading}>
+                    {logoutLoading ? 'Logging out...' : 'Logout'}
                 </button>
             </div>
         </div>

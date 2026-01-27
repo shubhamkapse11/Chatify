@@ -4,8 +4,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./src/db");
 const secureMiddleware = require("./src/middlewares/secure-middleware");
-
-const app = express();
+const {app ,server, io} = require("./socket-io/server")
+//  const app = express();
 
 app.use(cors({
     origin: ["http://localhost:5173", "http://localhost:3001"],
@@ -19,7 +19,7 @@ connectDB();
 
 const PORT = process.env.PORT || 5005;
 
-app.listen(PORT , ()=>{
+server.listen(PORT , ()=>{
     console.log(`app is listening on port --> ${PORT}`)
 });
 

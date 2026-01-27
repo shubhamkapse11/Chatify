@@ -14,11 +14,13 @@ function useSendMsg() {
             return;
         }
         const route = `http://localhost:5003/api/messages/message/send/${selectedConversation._id}`;
-        const res = await axios.post(route , {
-            message : message
+        const res = await axios.post(route, {
+            message: message
+        }, {
+            withCredentials: true
         })
-        if(res.data){
-            setMessages([...messages , res.data])
+        if(res.data.newMessage){
+            setMessages([...messages , res.data.newMessage])
         }
     } catch (error) {
         console.log("error while api call send messages", error?.message)
