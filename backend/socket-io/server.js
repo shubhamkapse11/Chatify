@@ -11,6 +11,17 @@ const io = new Server(server, {
     }
 });
 
+
+// Real time message
+export const getReceiverSocketId = (receiverId) => {
+    return users[receiverId];
+};
+
+
+
+
+
+
 // Store online users: { userId: socketId }
 const users = {};
 
@@ -20,23 +31,32 @@ const getReceiverSocketId = (receiverId) => {
 };
 
 io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+    console.log("🔌 New connection attempt - Socket ID:", socket.id);
     
     const userId = socket.handshake.query.userId;
+    console.log("📋 Received userId from query:", userId);
+    
     if (userId && userId !== "undefined") {
         users[userId] = socket.id;
-        console.log("User registered:", { userId, socketId: socket.id });
+        console.log("✅ User registered:", { userId, socketId: socket.id });
+        console.log("👥 Total online users:", Object.keys(users).length);
+        console.log("📊 All users:", users);
         
         // Emit to all clients about online users
         io.emit("getOnlineUsers", Object.keys(users));
+
+    } else {
+        console.log("❌ Invalid userId - not registering user");
     }
 
     socket.on("disconnect", () => {
-        console.log("user disconnected", socket.id);
+        console.log("🔴 User disconnecting - Socket ID:", socket.id);
         
         // Remove user from online users
-        if (userId) {
+        if (userId && userId !== "undefined") {
             delete users[userId];
+            console.log("🗑️ User removed:", userId);
+            console.log("👥 Remaining online users:", Object.keys(users).length);
             io.emit("getOnlineUsers", Object.keys(users));
         }
     });
