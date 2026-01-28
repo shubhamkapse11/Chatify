@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/useAuth'
 import useConversation from '../../states-manager/useConversation'
 import useLogout from '../../context/useLogout'
+import { useSocketContext } from '../../context/socketContext'
 function Left() {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
@@ -14,10 +15,13 @@ function Left() {
     const [authUser] = useAuth();
     const { selectedConversation, setSelectedConversation } = useConversation();
     const { logout, loading: logoutLoading } = useLogout();
+    const { socket, onlineUsers } = useSocketContext();
+    const isOnline = onlineUsers.includes(users._id)
+
     const handleUserClick = (user) => {
-        console.log("user==", user)
         setSelectedConversation(user);
     };
+
     // Static user data
     function getAlluser() {
         setLoading(true);
@@ -80,22 +84,34 @@ function Left() {
                         <div
                             key={user._id}
                             className={cn(
-                                `flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${selectedConversation?._id === user._id ? "bg-slate-800" : ""}`,
+                                `flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors ${selectedConversation?._id === user._id ? "bg-slate-800" : ""
+                                }`,
                                 "hover:bg-slate-800 text-slate-200 hover:text-white"
                             )}
                             onClick={() => handleUserClick(user)}
                         >
-                            {/* Avatar Placeholder */}
-                            <div className='h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center text-sm font-medium'>
-                                {user.name ? user.name.split(' ').map(n => n[0]).join('') : '?'}
+                            {/* Avatar Wrapper */}
+                            <div className="relative">
+                                {/* Online Indicator */}
+                                {onlineUsers.includes(user._id) && (
+                                    <span className="absolute top-0 right-0 h-3 w-3 rounded-full bg-green-500 ring-2 ring-slate-800" />
+                                )}
+
+                                {/* Avatar */}
+                                <div className="h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center text-sm font-medium">
+                                    {user.name
+                                        ? user.name.split(" ").map(n => n[0]).join("")
+                                        : "?"}
+                                </div>
                             </div>
 
                             {/* User Info */}
-                            <div className='flex flex-col'>
-                                <span className='font-medium'>{user.name}</span>
-                                <span className='text-xs text-slate-400'>{user.email}</span>
+                            <div className="flex flex-col">
+                                <span className="font-medium">{user.name}</span>
+                                <span className="text-xs text-slate-400">{user.email}</span>
                             </div>
                         </div>
+
                     ))
                 )}
             </div>
