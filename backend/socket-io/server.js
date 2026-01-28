@@ -13,7 +13,7 @@ const io = new Server(server, {
 
 
 // Real time message
-export const getReceiverSocketId = (receiverId) => {
+module.exports.getReceiverSocketId = (receiverId) => {
     return users[receiverId];
 };
 

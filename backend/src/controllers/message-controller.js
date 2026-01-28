@@ -2,7 +2,7 @@ const express = require("express");
 const Message = require("../models/message-model");
 const { isValidObjectId } = require("mongoose");
 const Conversation = require("../models/conversation-model");
-const { getReceiverSocketId } = require("../socket-io/server");
+const { getReceiverSocketId, io } = require("../../socket-io/server");
 const sendMessage = async (req , res) => {
     try{
         const {message} = req.body;
@@ -30,9 +30,14 @@ const sendMessage = async (req , res) => {
         }
         conversation.messages.push(newMessage._id)
         await conversation.save()
+        
+        // Convert Mongoose document to plain object before emitting
+        const messageObject = newMessage.toObject();
+        
         const receiverSocketId = getReceiverSocketId(receiver);
         if(receiverSocketId){
-            io.to(receiverSocketId).emit("newMessage", newMessage);
+            console.log("📤 Emitting newMessage to receiver:", receiver, "socketId:", receiverSocketId);
+            io.to(receiverSocketId).emit("newMessage", messageObject);
         }
         res.status(200).json({newMessage}) 
 

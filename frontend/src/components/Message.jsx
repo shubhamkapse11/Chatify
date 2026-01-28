@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { cn } from "../lib/utils";
 import useGetMessages from "../context/useGetMessages";
 import { useAuth } from "../context/useAuth";
+import useGetSocketMsg from "../context/useGetSocketMsg";
 
 const Messages = () => {
     const { messages, loading } = useGetMessages();
     const [authUser] = useAuth();
+    useGetSocketMsg();  // Enable real-time message updates
+
+    const lastMessageRef = useRef();
+
+    useEffect(() => {
+        setTimeout(() => {
+            lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+    }, [messages]);
+
     if (loading) {
         return (
             <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
@@ -16,7 +27,7 @@ const Messages = () => {
         )
     }
 
-    if (!messages || messages.length === 0) {
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
         return (
             <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
                 <div className="flex items-center justify-center h-full text-slate-500">
@@ -47,12 +58,13 @@ const Messages = () => {
                         {msg.message}
                     </div>
                     <span className="text-[10px] text-slate-500 mt-1 px-1">
-                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
                     </span>
                 </div>
             ))}
+            <div ref={lastMessageRef} />
         </div>
     );
 };
-
+/* eslint-disable react-hooks/exhaustive-deps */
 export default Messages;
