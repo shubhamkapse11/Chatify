@@ -12,6 +12,7 @@ function useGetMessages() {
     const [authUser, setAuthUser] = useAuth();
     const token = authUser?.data.token;
     console.log(token, "token , authUser", authUser)
+    
     const getMessages = async () => {
         setLoading(true);
         try {
