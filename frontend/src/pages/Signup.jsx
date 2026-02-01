@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/useAuth";
+import { Eye, EyeOff } from "lucide-react";
 
 const signupSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,6 +21,8 @@ const signupSchema = z.object({
 const Signup = () => {
     const [authUser, setAuthUser] = useAuth();
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
 
     const {
@@ -88,23 +91,41 @@ const Signup = () => {
 
                     <div>
                         <label className="block text-sm font-medium">Password</label>
-                        <input
-                            type="password"
-                            {...register("password")}
-                            className="w-full px-4 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter your password"
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                {...register("password")}
+                                className="w-full px-4 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                                placeholder="Enter your password"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 transform -translate-y-[calc(50%-2px)] text-slate-400 hover:text-white"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                         {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium">Confirm Password</label>
-                        <input
-                            type="password"
-                            {...register("confirmPassword")}
-                            className="w-full px-4 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Confirm your password"
-                        />
+                        <div className="relative">
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                {...register("confirmPassword")}
+                                className="w-full px-4 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                                placeholder="Confirm your password"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3 top-1/2 transform -translate-y-[calc(50%-2px)] text-slate-400 hover:text-white"
+                            >
+                                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                         {errors.confirmPassword && (
                             <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
                         )}
