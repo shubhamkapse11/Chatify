@@ -3,6 +3,7 @@ import { cn } from "../lib/utils";
 import useGetMessages from "../context/useGetMessages";
 import { useAuth } from "../context/useAuth";
 import useGetSocketMsg from "../context/useGetSocketMsg";
+import { Skeleton } from "./ui/Skeleton";
 
 const Messages = () => {
     const { messages, loading } = useGetMessages();
@@ -20,9 +21,20 @@ const Messages = () => {
     if (loading) {
         return (
             <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-                <div className="flex items-center justify-center h-full text-slate-500">
-                    <span>Loading messages...</span>
-                </div>
+                {Array.from({ length: 5 }).map((_, idx) => (
+                    <div
+                        key={idx}
+                        className={cn(
+                            "flex flex-col max-w-[70%]",
+                            idx % 2 === 0 ? "ml-auto items-end" : "mr-auto items-start"
+                        )}
+                    >
+                        <Skeleton className={cn(
+                            "h-10 w-40 rounded-2xl",
+                            idx % 2 === 0 ? "rounded-br-none" : "rounded-bl-none"
+                        )} />
+                    </div>
+                ))}
             </div>
         )
     }
