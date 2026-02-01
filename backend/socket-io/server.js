@@ -20,8 +20,6 @@ module.exports.getReceiverSocketId = (receiverId) => {
 
 
 
-
-
 // Store online users: { userId: socketId }
 const users = {};
 
