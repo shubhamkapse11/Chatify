@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../context/useAuth";
 import useConversation from "../states-manager/useConversation";
 import { useSocketContext } from '../context/socketContext'
+import { ArrowLeft } from "lucide-react";
 
 const ChatUser = () => {
     const [authUser] = useAuth();
@@ -11,6 +12,12 @@ const ChatUser = () => {
     const { socket, onlineUsers } = useSocketContext();
     return (
         <div className="flex items-center gap-3 p-4 bg-slate-800 border-b border-slate-700">
+            <button
+                onClick={() => setSelectedConversation(null)}
+                className="md:hidden p-1 hover:bg-slate-700 rounded-full transition-colors text-slate-300 hover:text-white"
+            >
+                <ArrowLeft size={20} />
+            </button>
             {/* Avatar */}
             <div className="h-10 w-10 rounded-full bg-slate-600 flex items-center justify-center text-sm font-semibold text-white">
                 {selectedConversation?.name.charAt(0).toUpperCase()}
@@ -27,4 +34,3 @@ const ChatUser = () => {
 };
 
 export default ChatUser;
-
