@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,6 +19,7 @@ const signupSchema = z.object({
 
 const Signup = () => {
     const [authUser, setAuthUser] = useAuth();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const {
@@ -35,6 +36,7 @@ const Signup = () => {
             email: data.email,
             password: data.password,
         };
+        setLoading(true);
         try {
             const url = "http://localhost:5003/api/users/register";
             const response = await axios.post(url, userInfo, {
@@ -52,6 +54,8 @@ const Signup = () => {
             } else {
                 toast.error("Signup failed");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -108,9 +112,14 @@ const Signup = () => {
 
                     <button
                         type="submit"
-                        className="w-full py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-300"
+                        disabled={loading}
+                        className="w-full py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Signup
+                        {loading ? (
+                            <div className='animate-spin rounded-full h-5 w-5 border-b-2 border-white'></div>
+                        ) : (
+                            "Signup"
+                        )}
                     </button>
                 </form>
                 <p className="text-sm text-center text-slate-400">

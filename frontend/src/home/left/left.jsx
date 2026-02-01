@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchComponent from '../../components/Search'
 import { cn } from '../../lib/utils'
 import { LogOut } from 'lucide-react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/useAuth'
 import useConversation from '../../states-manager/useConversation'
 import useLogout from '../../context/useLogout'
 import { useSocketContext } from '../../context/socketContext'
+import { Skeleton } from '../../components/ui/Skeleton'
+
 function Left() {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
@@ -15,8 +16,7 @@ function Left() {
     const [authUser] = useAuth();
     const { selectedConversation, setSelectedConversation } = useConversation();
     const { logout, loading: logoutLoading } = useLogout();
-    const { socket, onlineUsers } = useSocketContext();
-    const isOnline = onlineUsers.includes(users._id)
+    const { onlineUsers } = useSocketContext();
 
     const handleUserClick = (user) => {
         setSelectedConversation(user);
@@ -61,10 +61,15 @@ function Left() {
             {/* User List Script */}
             <div className='flex-1 overflow-y-auto px-2 space-y-2 no-scrollbar'>
                 {loading ? (
-                    <div className='flex flex-col items-center justify-center h-full text-slate-400'>
-                        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2'></div>
-                        <span>Loading users...</span>
-                    </div>
+                    Array.from({ length: 7 }).map((_, idx) => (
+                        <div key={idx} className="flex items-center gap-4 p-3 rounded-lg">
+                            <Skeleton className="h-10 w-10 rounded-full" />
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-32" />
+                                <Skeleton className="h-3 w-20" />
+                            </div>
+                        </div>
+                    ))
                 ) : error ? (
                     <div className='flex flex-col items-center justify-center h-full text-red-500 p-4 text-center'>
                         <span className='mb-2'>{error}</span>
