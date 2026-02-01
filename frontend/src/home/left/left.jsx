@@ -48,7 +48,10 @@ function Left() {
 
     // console.log("users", users)
     return (
-        <div className='w-[30%] h-full bg-slate-950 border-r border-slate-800 flex flex-col'>
+        <div className={cn(
+            'w-full md:w-[30%] h-full bg-slate-950 border-r border-slate-800 flex flex-col',
+            selectedConversation ? 'hidden md:flex' : 'flex'
+        )}>
             {/* Header */}
             <h1 className='text-2xl font-bold p-4 text-white tracking-wide'>Chat App</h1>
 
